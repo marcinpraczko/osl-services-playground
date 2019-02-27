@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ----------------------------------------------------------------------------
+# This vagrant configuration is for:
+# - Running VMs for core services (i.e: Named, Mail, etc)
+#
+# Vagrant box : Clean CentOS 7 x86_64 (Latest version)
+# ----------------------------------------------------------------------------
+
+# Full documentation is available at:
+# http://docs.vagrantup.com/v2/
+unless Vagrant.has_plugin?("vagrant-vbguest")
+  raise 'vagrant-vbguest plugin is not installed!'
+end
+
+# Default Virtualbox .box
+# See: https://wiki.debian.org/Teams/Cloud/VagrantBaseBoxes
+BOX = 'centos/7'
+RAM = 1024            # Default memory size in MB
+
+
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vbguest.auto_update = false
+  config.vbguest.no_remote = true
+
+  config.vm.define :osl_services_master do |services_core|
+    services_core.vm.box = BOX
+    services_core.vm.hostname = "osl-services-core"
+
+    services_core.vm.provider "virtualbox" do |vbox|
+      vbox.memory = RAM
+    end
+
+    services_core.vm.network :private_network, ip: "192.168.79.251", run: "always"
+
+    # Provisioning
+    services_core.vm.provision "shell", inline: "ifup eth1"
+  end
+
+end
