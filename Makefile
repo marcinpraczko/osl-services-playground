@@ -18,14 +18,20 @@ help: ## HELP: None: Show this help message
 	@echo '========'
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
+# -- Helpers --
+.PHONY: help-deps-info
+help-deps-info: ## HELP: None: Display details about dependency of configuration
+help-deps-info:
+	$(MAKE) -f Makefile.deps-info
+
 # -- Core services --
 TARGET_DEPS := core-services-create-vagrant
-.PHONY: all-services-init-all
+.PHONY: all-services-init
 all-services-init-all: ## INIT: All Services: Create and provision all VMs with services
 all-services-init-all: $(TARGET_DEPS)
 
 TARGET_DEPS := core-services-destroy-vagrant
-.PHONY: core-services-done-all
+.PHONY: all-services-done
 all-services-done-all: ## DONE: All Services: Destroy all VMs and stacks (All data will be lost)
 all-services-done-all: $(TARGET_DEPS)
 
