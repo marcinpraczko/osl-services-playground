@@ -1,4 +1,7 @@
 ### This project
+*~
+*.orig
+*.org
 .vagrant/
 provisioning/ansible/roles-galaxy/
 

@@ -1,0 +1,22 @@
+# ---------------------------
+# Install Ansible Roles
+# Links:
+#   - http://docs.ansible.com/ansible/galaxy.html#installing-multiple-roles-from-a-file
+# ---------------------------
+
+# https://galaxy.ansible.com/geerlingguy/repo-epel
+# https://github.com/geerlingguy/ansible-role-repo-epel
+- src: geerlingguy.repo-epel
+  name: "geerlingguy.repo-epel"
+  version: 1.2.3
+
+# https://galaxy.ansible.com/marcinpraczko/ansible_essentials
+# https://github.com/marcinpraczko/ansible-role-ansible_essentials
+- src: marcinpraczko.ansible_essentials
+  name: "marcinpraczko.ansible_essentials"
+  version: 0.1.0
+
+# https://github.com/marcinpraczko/ansible-role-docker_service
+- src: marcinpraczko.docker_service
+  name: "marcinpraczko.docker_service"
+  version: 0.1.0

@@ -1,0 +1,11 @@
+---
+
+- name: "Install common configuration"
+  gather_facts: True
+  become: True
+  hosts: all:!localhost
+
+  roles:
+    - { role: "geerlingguy.repo-epel" }
+    - { role: "marcinpraczko.ansible_essentials" }
+    - { role: "marcinpraczko.docker_service" }
