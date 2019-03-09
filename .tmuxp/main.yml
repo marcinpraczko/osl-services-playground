@@ -1,0 +1,64 @@
+---
+
+# Generated from template: tmuxp
+# Version: 0.1.2
+
+session_name: osl-services-playground
+start_directory: "${PROJECT_ROOT}"
+shell_command_before:
+  - '[ -f venv/bin/activate ] && source venv/bin/activate && reset'
+windows:
+  - window_name: Main - NEW Project
+    layout: main-horizontal
+    options:
+      automatic-rename: 'off'
+      main-pane-height: 20
+    panes:
+      - focus: true
+        shell_command:
+          - clear
+          - env | grep VIRTUAL_ENV
+      - shell_command:
+          - clear
+          - env | grep VIRTUAL_ENV
+          - make
+
+  - window_name: Main - OLD Project
+    start_directory: "~/myworkspace/Services"
+    layout: main-horizontal
+    options:
+      automatic-rename: 'off'
+      main-pane-height: 20
+    panes:
+      - focus: true
+        shell_command:
+          - clear
+          - env | grep VIRTUAL_ENV
+      - shell_command:
+          - clear
+          - env | grep VIRTUAL_ENV
+          - make
+
+  - window_name: Docker
+    layout: main-horizontal
+    options:
+      automatic-rename: 'off'
+      main-pane-height: 20
+    panes:
+      - focus: "True"
+        shell_command:
+          - watch -t -n15 'echo "Docker running containers (ref 15s)" && echo && docker ps'
+      - shell_command:
+          - watch -t -n15 'echo "Docker images" && echo && docker images'
+
+  - window_name: Help
+    start_directory: "${PWD}"
+    layout: tiled
+    options:
+      automatic-rename: 'off'
+      main-pane-height: 45
+    panes:
+      - focus: true
+        shell_command:
+          - clear
+          - cat README.rst
