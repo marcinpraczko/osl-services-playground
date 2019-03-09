@@ -30,6 +30,8 @@ help-deps-info:
 
 # -- Core services --
 TARGET_DEPS := core-services-create-vagrant
+TARGET_DEPS += ansible-update-galaxy-roles
+TARGET_DEPS += ansible-provision-core-services
 .PHONY: all-services-init
 all-services-init-all: ## INIT: All Services: Create and provision all VMs with services
 all-services-init-all: $(TARGET_DEPS)
