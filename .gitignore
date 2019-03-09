@@ -1,3 +1,10 @@
+### This project
+.vagrant/
+provisioning/ansible/roles-galaxy/
+
+# This is related with Ansible Inventory
+hosts
+
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/

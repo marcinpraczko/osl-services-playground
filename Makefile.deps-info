@@ -14,6 +14,9 @@
 # - This is temporary before I will get better solution (for example in python)
 # ============================================================================
 
+# TODO: Idea was great - but when complexity increases this become more and more complex
+#       and hard to manage
+
 LCD=$(shell pwd)
 
 # Settings for colourful output
@@ -45,6 +48,7 @@ service_rancher_nodes: $(TARGET_DEPS);
 TARGET_DEPS := display_info
 TARGET_DEPS += install_vagrant
 TARGET_DEPS += install_virtualbox
+TARGET_DEPS += install_ansible
 .PHONY: run_vagrant_core_vms
 run_vagrant_core_vms: $(TARGET_DEPS);
 	@echo "$(CYAN)Local-Machine$(NC) | $(GREEN)USER$(NC) | INFRA/VMS/CORE | $(YELLOW)Running vagrant VMs$(NC)"
@@ -56,6 +60,10 @@ install_vagrant:
 .PHONY: install_virtualbox
 install_virtualbox:
 	@echo "$(CYAN)Local-Machine$(NC) | $(RED)ROOT$(NC) | INSTALL | $(YELLOW)VirtualBox$(NC)"
+
+.PHONY: install_ansible
+install_ansible:
+	@echo "$(CYAN)Local-Machine$(NC) | $(GREEN)USER/PROJECT/VENV$(NC) | INSTALL | $(YELLOW)Ansible$(NC)"
 
 # --- Helpers ---
 .PHONY: display_info

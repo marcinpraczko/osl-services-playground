@@ -1,0 +1,24 @@
+# Basic inventory
+[generic]
+localhost ansible_connection=local
+
+#[jenkins_slaves]
+#vm-jenkins-slave-1    ansible_host=192.168.79.31    ansible_user=vagrant    ansible_ssh_private_key_file=/home/haclet/.vagrant.d/insecure_private_key
+
+#[squid_servers]
+#osl_services_master
+
+#[named_masters]
+#osl_services_master
+
+#[webservers]
+#osl_services_master
+
+#[mailserver]
+#osl_services_master
+
+#[rancher_master_server]
+#osl_services_master
+
+#[main_servers]
+#osl_services_master

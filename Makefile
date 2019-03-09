@@ -1,6 +1,8 @@
 # Run commands much faster
 
 LCD=$(shell pwd)
+PROJECT_ROOT=$(shell git rev-parse --show-toplevel)
+ANSIBLE_ROOT=provisioning/ansible
 VAGRANT_FOR_CORE_SERVICES=infrastructure/vagrant/core
 
 # Settings for colourful output
@@ -60,3 +62,41 @@ TARGET_DEPS += core-services-create-vagrant
 .PHONY: core-services-recreate-vagrant
 core-services-recreate-vagrant: ## VAGRANT: Core Services: Recreate VMs (destroy / create)
 core-services-recreate-vagrant: $(TARGET_DEPS)
+
+# --- Ansible ---
+TARGET_DEPS := ansible-generate-inventories
+.PHONY: ansible-ping-core-services
+ansible-ping-core-services: ## ANSIBLE: Core Services: Use ansible to ping VMs
+ansible-ping-core-services: $(TARGET_DEPS)
+	cd $(ANSIBLE_ROOT) && \
+		ansible-playbook -i inventories/vagrant/ playbooks/ping_all_hosts.yml --list-hosts
+	cd $(ANSIBLE_ROOT) && \
+		ansible-playbook -i inventories/vagrant/ playbooks/ping_all_hosts.yml
+
+TARGET_DEPS := ansible-generate-inventories
+.PHONY: ansible-provision-core-services
+ansible-provision-core-services: ## ANSIBLE: Core Services: Use ansible to provision VMs
+ansible-provision-core-services: $(TARGET_DEPS)
+	cd $(ANSIBLE_ROOT) && \
+		ansible-playbook -i inventories/vagrant/ playbooks/configure_full_stack.yml --list-hosts
+	cd $(ANSIBLE_ROOT) && \
+		ansible-playbook -i inventories/vagrant/ playbooks/configure_full_stack.yml
+
+# TODO: Migrate this to seperate script
+.PHONY: ansible-generate-inventories
+ansible-generate-inventories: ## ANSIBLE: Core Services: Generate ansible inventory from Vagrant
+	@echo "Generate Vagrant Inventory for ansible..."
+	cd $(VAGRANT_FOR_CORE_SERVICES) && $(PROJECT_ROOT)/scripts/ansible-vagrant-update-hosts.sh
+	cd $(VAGRANT_FOR_CORE_SERVICES) && \
+		mv -vf hosts_vagrant $(PROJECT_ROOT)/provisioning/ansible/inventories/vagrant/hosts
+	cd $(ANSIBLE_ROOT) && cat inventories/vagrant/inventory.txt >> inventories/vagrant/hosts
+	@echo "== Inventories / Vagrant hosts =="
+	cd $(ANSIBLE_ROOT) && ansible-inventory -i inventories/vagrant/ --list -y
+	@echo ""
+
+# TODO: Migrate this to seperate script
+.PHONY: ansible-update-galaxy-roles
+ansible-update-galaxy-roles: ## ANSIBLE: All Services: Update all galaxy roles
+	@echo "Updating roles from Ansible-Galaxy..."
+	cd $(ANSIBLE_ROOT) && rm -Rf roles-galaxy/marcinpraczko.named
+	cd $(ANSIBLE_ROOT) && ansible-galaxy install -p roles-galaxy -r requirements.yml

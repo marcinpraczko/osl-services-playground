@@ -1,0 +1,12 @@
+---
+
+
+# TODO: This play is running even if tags are specific (and tags are not here)
+- name: "Install common configuration"
+  gather_facts: True
+  become: True
+  hosts: all:!localhost
+
+  tasks:
+    - name: "Check PING"
+      ping:
