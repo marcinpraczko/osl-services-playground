@@ -2,8 +2,10 @@
 
 LCD=$(shell pwd)
 PROJECT_ROOT=$(shell git rev-parse --show-toplevel)
-ANSIBLE_ROOT=provisioning/ansible
 VAGRANT_FOR_CORE_SERVICES=infrastructure/vagrant/core
+
+# --- Ansible ---
+ANSIBLE_ROOT=provisioning/ansible
 
 # Settings for colourful output
 RED=$(shell tput setaf 1)
@@ -68,19 +70,15 @@ TARGET_DEPS := ansible-generate-inventories
 .PHONY: ansible-ping-core-services
 ansible-ping-core-services: ## ANSIBLE: Core Services: Use ansible to ping VMs
 ansible-ping-core-services: $(TARGET_DEPS)
-	cd $(ANSIBLE_ROOT) && \
-		ansible-playbook -i inventories/vagrant/ playbooks/ping_all_hosts.yml --list-hosts
-	cd $(ANSIBLE_ROOT) && \
-		ansible-playbook -i inventories/vagrant/ playbooks/ping_all_hosts.yml
+ansible-ping-core-services: ANSIBLE_PLAYBOOK = playbooks/ping_all_hosts.yml
+ansible-ping-core-services: ansible-run-playbook
 
 TARGET_DEPS := ansible-generate-inventories
 .PHONY: ansible-provision-core-services
 ansible-provision-core-services: ## ANSIBLE: Core Services: Use ansible to provision VMs
 ansible-provision-core-services: $(TARGET_DEPS)
-	cd $(ANSIBLE_ROOT) && \
-		ansible-playbook -i inventories/vagrant/ playbooks/configure_full_stack.yml --list-hosts
-	cd $(ANSIBLE_ROOT) && \
-		ansible-playbook -i inventories/vagrant/ playbooks/configure_full_stack.yml
+ansible-provision-core-services: ANSIBLE_PLAYBOOK = playbooks/configure_full_stack.yml
+ansible-provision-core-services: ansible-run-playbook
 
 # TODO: Migrate this to seperate script
 .PHONY: ansible-generate-inventories
@@ -96,7 +94,12 @@ ansible-generate-inventories: ## ANSIBLE: Core Services: Generate ansible invent
 
 # TODO: Migrate this to seperate script
 .PHONY: ansible-update-galaxy-roles
-ansible-update-galaxy-roles: ## ANSIBLE: All Services: Update all galaxy roles
+ansible-update-galaxy-roles: ## ANSIBLE-GALAXY: All Services: Update all galaxy roles
 	@echo "Updating roles from Ansible-Galaxy..."
 	cd $(ANSIBLE_ROOT) && rm -Rf roles-galaxy/marcinpraczko.named
 	cd $(ANSIBLE_ROOT) && ansible-galaxy install -p roles-galaxy -r requirements.yml
+
+# --- Helpers (no display in help) ---
+.PHONY: ansible-run-playbook
+ansible-run-playbook:
+	@scripts/ansible-run-playbook.sh -i inventories/vagrant/ $(ANSIBLE_PLAYBOOK)

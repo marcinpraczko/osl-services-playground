@@ -1,8 +1,15 @@
 ---
 
+- name: "Simple ping - Not ROOT user"
+  gather_facts: True
+  become: False
+  hosts: all:!localhost
 
-# TODO: This play is running even if tags are specific (and tags are not here)
-- name: "Install common configuration"
+  tasks:
+    - name: "Check PING"
+      ping:
+
+- name: "Simple ping - ROOT user"
   gather_facts: True
   become: True
   hosts: all:!localhost

@@ -4,6 +4,7 @@
 # https://github.com/michaelcontento/ansible-vagrant/blob/master/bin/ansible-vagrant-update-hosts
 
 # Changes - adjusted:
+# 2019/03/09
 #   - Read valid hostname from ssh-config
 #   - Work with ansible 2.X (http://docs.ansible.com/ansible/intro_inventory.html)
 #     There is info in section: 'List of Behavioral Inventory Parameters'
